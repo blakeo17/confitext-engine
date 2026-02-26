@@ -1,46 +1,38 @@
 import gspread
 from google.oauth2.service_account import Credentials
-import json
-import os
 import pandas as pd
 
+# Google Sheets scopes
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive",
 ]
 
-# Load credentials from Railway environment variable
-creds_dict = json.loads(os.environ["GOOGLE_CREDENTIALS_JSON"])
-
-creds = Credentials.from_service_account_info(
-    creds_dict,
+# Load credentials from local JSON file
+creds = Credentials.from_service_account_file(
+    "google_credentials.json",
     scopes=SCOPES
 )
 
 client = gspread.authorize(creds)
 
-# Open your Google Sheet
-sheet = client.open("ConfiText Content Engine").sheet1
+# Replace with your actual sheet name
+SHEET_NAME = "ConfiText Metrics"
 
+def sync_sheet():
+    print("Syncing sheet...")
 
-def sync_metrics():
-    print("Syncing metrics from Google Sheet...")
-
-    # Get all records
+    sheet = client.open(SHEET_NAME).sheet1
     records = sheet.get_all_records()
 
     if not records:
         print("No data found in sheet.")
-        return
+        return []
 
     df = pd.DataFrame(records)
 
-    # Save locally
-    os.makedirs("data", exist_ok=True)
-    df.to_json("data/metrics.json", orient="records", indent=2)
+    # Save to local JSON file for analysis
+    df.to_json("data/metrics.json", orient="records")
 
     print("Metrics synced successfully.")
-
-
-if __name__ == "__main__":
-    sync_metrics()
+    return records
