@@ -1,0 +1,14 @@
+Generate 30 short-form scripts (10–15 seconds).
+
+Format:
+
+Hook:
+Problem:
+Insight:
+
+No product mention.
+Pure value.
+Designed for short-form AI avatar videos.
+
+Tone:
+Calm, bold, emotionally intelligent.
